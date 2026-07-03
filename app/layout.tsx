@@ -24,6 +24,10 @@ export const metadata: Metadata = {
     description: "A refined reimagining of Thai cuisine, in the heart of Aldermere Quarter.",
     type: "website",
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export const viewport: Viewport = {
