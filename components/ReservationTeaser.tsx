@@ -31,41 +31,51 @@ export default function ReservationTeaser() {
   const [phone, setPhone] = useState("");
 
   const [slots, setSlots] = useState<Slot[]>([]);
-  const [slotsLoading, setSlotsLoading] = useState(false);
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ confirmed: boolean; message: string } | null>(null);
 
+  const requestKey = date ? `${date}:${partySize}` : null;
+  const slotsLoading = requestKey !== null && loadedKey !== requestKey;
+  const currentSlots = loadedKey === requestKey ? slots : [];
+  const selectedSlotValid = selectedTime !== null && currentSlots.some((s) => s.time === selectedTime && s.available);
+
   useEffect(() => {
-    if (!date) {
-      setSlots([]);
-      setSelectedTime(null);
-      return;
-    }
+    if (!requestKey) return;
 
     let cancelled = false;
-    setSlotsLoading(true);
-    setSelectedTime(null);
-    setResult(null);
 
     fetch(`/api/reservations/availability?date=${encodeURIComponent(date)}&partySize=${partySize}`)
       .then((res) => res.json())
       .then((data) => {
-        if (!cancelled) setSlots(data.slots ?? []);
-      })
-      .finally(() => {
-        if (!cancelled) setSlotsLoading(false);
+        if (!cancelled) {
+          setSlots(data.slots ?? []);
+          setLoadedKey(requestKey);
+        }
       });
 
     return () => {
       cancelled = true;
     };
-  }, [date, partySize]);
+  }, [date, partySize, requestKey]);
+
+  function handleDateChange(newDate: string) {
+    setDate(newDate);
+    setSelectedTime(null);
+    setResult(null);
+  }
+
+  function handlePartySizeChange(newPartySize: number) {
+    setPartySize(newPartySize);
+    setSelectedTime(null);
+    setResult(null);
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!selectedTime) return;
+    if (!selectedSlotValid || !selectedTime) return;
 
     setSubmitting(true);
     setResult(null);
@@ -97,7 +107,7 @@ export default function ReservationTeaser() {
     }
   }
 
-  const formValid = date && selectedTime && name.trim() && email.trim() && phone.trim();
+  const formValid = date && selectedSlotValid && name.trim() && email.trim() && phone.trim();
 
   if (result?.confirmed) {
     return (
@@ -122,7 +132,7 @@ export default function ReservationTeaser() {
             type="date"
             min={todayISO()}
             value={date}
-            onChange={(e) => setDate(e.target.value)}
+            onChange={(e) => handleDateChange(e.target.value)}
             required
           />
         </div>
@@ -136,7 +146,7 @@ export default function ReservationTeaser() {
             min={1}
             max={12}
             value={partySize}
-            onChange={(e) => setPartySize(Math.min(12, Math.max(1, parseInt(e.target.value, 10) || 1)))}
+            onChange={(e) => handlePartySizeChange(Math.min(12, Math.max(1, parseInt(e.target.value, 10) || 1)))}
             required
           />
         </div>
@@ -189,7 +199,7 @@ export default function ReservationTeaser() {
             <div style={{ fontSize: 14, color: "rgba(236,231,222,0.5)", padding: "14px 0" }}>Checking availability…</div>
           ) : (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(96px, 1fr))", gap: 10 }}>
-              {slots.map((slot) => (
+              {currentSlots.map((slot) => (
                 <button
                   key={slot.time}
                   type="button"
