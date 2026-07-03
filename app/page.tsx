@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import ReservationTeaser from "@/components/ReservationTeaser";
 
 export default function Home() {
   return (
@@ -176,29 +177,7 @@ export default function Home() {
             Dinner is served nightly by reservation. We recommend booking three weeks ahead.
           </p>
 
-          <form action="/reservations" method="get">
-            <div className="kn-res-row" style={{ marginBottom: 28, textAlign: "left" }}>
-              <div>
-                <label htmlFor="teaser-date" style={{ display: "block", fontSize: 10, letterSpacing: "0.14em", color: "rgba(236,231,222,0.5)", marginBottom: 8 }}>DATE</label>
-                <input id="teaser-date" name="date" className="kn-input" type="date" />
-              </div>
-              <div>
-                <label htmlFor="teaser-time" style={{ display: "block", fontSize: 10, letterSpacing: "0.14em", color: "rgba(236,231,222,0.5)", marginBottom: 8 }}>TIME</label>
-                <input id="teaser-time" name="time" className="kn-input" type="time" defaultValue="19:30" />
-              </div>
-              <div>
-                <label htmlFor="teaser-party" style={{ display: "block", fontSize: 10, letterSpacing: "0.14em", color: "rgba(236,231,222,0.5)", marginBottom: 8 }}>PARTY</label>
-                <input id="teaser-party" name="partySize" className="kn-input" type="number" min={1} max={12} placeholder="2" />
-              </div>
-              <div>
-                <label htmlFor="teaser-name" style={{ display: "block", fontSize: 10, letterSpacing: "0.14em", color: "rgba(236,231,222,0.5)", marginBottom: 8 }}>NAME</label>
-                <input id="teaser-name" name="name" className="kn-input" type="text" placeholder="Full name" />
-              </div>
-            </div>
-            <button type="submit" className="kn-cta-solid">
-              REQUEST A TABLE
-            </button>
-          </form>
+          <ReservationTeaser />
         </div>
       </div>
 
