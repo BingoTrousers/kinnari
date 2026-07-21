@@ -132,6 +132,17 @@ body {
   color-scheme: dark;
 }
 
+textarea.kn-input {
+  border: 1px solid rgba(236, 231, 222, 0.28);
+  border-radius: 4px;
+  padding: 12px 14px;
+  line-height: 1.6;
+}
+
+textarea.kn-input:focus {
+  border-color: #c2a06a;
+}
+
 .kn-cta {
   border: 1px solid rgba(201, 162, 75, 0.55);
   color: #e6d5ab;
