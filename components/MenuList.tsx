@@ -151,11 +151,22 @@ export default function MenuList() {
       <div style={{ padding: "0 clamp(24px,6vw,96px)", maxWidth: 840, margin: "0 auto clamp(32px,4vw,44px)" }}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center", alignItems: "baseline" }}>
           <span style={{ fontSize: 10, letterSpacing: "0.2em", color: "rgba(236,231,222,0.3)", marginRight: 4 }}>FILTER</span>
-          <button type="button" onClick={() => setActiveTag(null)} style={filterButtonStyle(activeTag === null)}>
+          <button
+            type="button"
+            onClick={() => setActiveTag(null)}
+            aria-pressed={activeTag === null}
+            style={filterButtonStyle(activeTag === null)}
+          >
             ALL
           </button>
           {TAGS.map((tag) => (
-            <button key={tag} type="button" onClick={() => setActiveTag(tag)} style={filterButtonStyle(activeTag === tag)}>
+            <button
+              key={tag}
+              type="button"
+              onClick={() => setActiveTag(tag)}
+              aria-pressed={activeTag === tag}
+              style={filterButtonStyle(activeTag === tag)}
+            >
               {TAG_LABELS[tag]}
             </button>
           ))}
@@ -196,6 +207,7 @@ export default function MenuList() {
                   <button
                     type="button"
                     onClick={() => toggleDish(dish.name)}
+                    aria-pressed={selectedDishes.has(dish.name)}
                     style={{
                       background: "none",
                       border: "none",
@@ -234,7 +246,7 @@ export default function MenuList() {
             flexWrap: "wrap",
           }}
         >
-          <span style={{ fontSize: 13, color: "rgba(236,231,222,0.8)" }}>
+          <span aria-live="polite" style={{ fontSize: 13, color: "rgba(236,231,222,0.8)" }}>
             {selectedDishes.size} dish{selectedDishes.size > 1 ? "es" : ""} selected for tasting request
           </span>
           <Link

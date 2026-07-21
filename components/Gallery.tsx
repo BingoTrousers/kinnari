@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 const items = [
@@ -13,10 +13,16 @@ const items = [
 
 export default function Gallery() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
-    if (openIndex === null) return;
+    if (openIndex === null) {
+      triggerRef.current?.focus();
+      return;
+    }
 
+    closeButtonRef.current?.focus();
     document.body.style.overflow = "hidden";
 
     function handleKeyDown(e: KeyboardEvent) {
@@ -48,7 +54,10 @@ export default function Gallery() {
         {items.map((item, index) => (
           <button
             key={item.caption}
-            onClick={() => setOpenIndex(index)}
+            onClick={(e) => {
+              triggerRef.current = e.currentTarget;
+              setOpenIndex(index);
+            }}
             aria-label={`View larger image: ${item.caption}`}
             style={{
               height: item.height,
@@ -99,6 +108,7 @@ export default function Gallery() {
           }}
         >
           <button
+            ref={closeButtonRef}
             onClick={() => setOpenIndex(null)}
             aria-label="Close"
             style={{

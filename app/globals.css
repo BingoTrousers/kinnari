@@ -127,6 +127,11 @@ body {
   border-bottom-color: #c2a06a;
 }
 
+.kn-input:focus-visible {
+  outline: 2px solid #c2a06a;
+  outline-offset: 2px;
+}
+
 .kn-input[type="date"],
 .kn-input[type="time"] {
   color-scheme: dark;
