@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import Gallery from "@/components/Gallery";
 import ReservationTeaser from "@/components/ReservationTeaser";
 
 export default function Home() {
@@ -125,38 +126,7 @@ export default function Home() {
       </div>
 
       {/* GALLERY */}
-      <div id="gallery" style={{ padding: "0 clamp(24px,6vw,96px) clamp(96px,12vw,160px)", maxWidth: 1360, margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: "clamp(48px,6vw,72px)" }}>
-          <div style={{ fontSize: 12, letterSpacing: "0.28em", color: "#c2a06a", marginBottom: 20 }}>GALLERY</div>
-          <h2 style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 500, fontSize: "clamp(30px,3.6vw,46px)", margin: 0, color: "#ece7de" }}>
-            An evening at KINNARI
-          </h2>
-        </div>
-        <div className="kn-gallery-grid">
-          {[
-            { src: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1000&q=80", caption: "Wagyu Yang Jim Jaew", height: 340, span: 3 },
-            { src: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1000&q=80", caption: "The dining room", height: 340, span: 3 },
-            { src: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=1000&q=80", caption: "Gaeng Keow Wan Goong Mangkorn", height: 280, span: 2 },
-            { src: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1400&q=80", caption: "The bar", height: 280, span: 2 },
-            { src: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=1000&q=80", caption: "Khao Niao Mamuang", height: 280, span: 2 },
-          ].map((item) => (
-            <div key={item.caption} style={{ height: item.height, gridColumn: `span ${item.span}`, position: "relative", overflow: "hidden" }}>
-              <Image
-                src={item.src}
-                alt={item.caption}
-                fill
-                loading="lazy"
-                sizes={`(max-width: 760px) 100vw, ${(item.span / 6) * 100}vw`}
-                style={{ objectFit: "cover" }}
-              />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(20,17,12,0.05), rgba(20,17,12,0.6))" }} />
-              <span style={{ position: "absolute", left: 22, bottom: 18, fontFamily: "var(--font-cormorant), serif", fontStyle: "italic", fontSize: 17, color: "rgba(236,231,222,0.92)", letterSpacing: "0.02em" }}>
-                {item.caption}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+      <Gallery />
 
       {/* RESERVATIONS TEASER */}
       <div
