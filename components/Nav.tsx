@@ -9,7 +9,7 @@ const linkStyle: React.CSSProperties = {
   fontWeight: 400,
 };
 
-export default function Nav({ active }: { active?: "menu" }) {
+export default function Nav({ active }: { active?: "menu" | "contact" }) {
   return (
     <nav
       style={{
@@ -36,6 +36,7 @@ export default function Nav({ active }: { active?: "menu" }) {
         <Link href="/#story" style={linkStyle}>OUR STORY</Link>
         <Link href="/menu" style={active === "menu" ? { ...linkStyle, color: "#e6d5ab" } : linkStyle}>MENU</Link>
         <Link href="/#gallery" style={linkStyle}>GALLERY</Link>
+        <Link href="/contact" style={active === "contact" ? { ...linkStyle, color: "#e6d5ab" } : linkStyle}>CONTACT</Link>
         <Link
           href="/reservations"
           style={{

@@ -47,6 +47,7 @@ export default function Footer() {
             <Link href="/#story" style={{ color: "rgba(236,231,222,0.6)", textDecoration: "none", fontSize: 12, letterSpacing: "0.1em" }}>STORY</Link>
             <Link href="/menu" style={{ color: "rgba(236,231,222,0.6)", textDecoration: "none", fontSize: 12, letterSpacing: "0.1em" }}>MENU</Link>
             <Link href="/#gallery" style={{ color: "rgba(236,231,222,0.6)", textDecoration: "none", fontSize: 12, letterSpacing: "0.1em" }}>GALLERY</Link>
+            <Link href="/contact" style={{ color: "rgba(236,231,222,0.6)", textDecoration: "none", fontSize: 12, letterSpacing: "0.1em" }}>CONTACT</Link>
           </div>
         </div>
       </div>

@@ -81,6 +81,7 @@ export default function MobileNavToggle() {
           <Link href="/#story" onClick={() => setNavOpen(false)} style={mobileLinkStyle}>Our Story</Link>
           <Link href="/menu" onClick={() => setNavOpen(false)} style={mobileLinkStyle}>Menu</Link>
           <Link href="/#gallery" onClick={() => setNavOpen(false)} style={mobileLinkStyle}>Gallery</Link>
+          <Link href="/contact" onClick={() => setNavOpen(false)} style={mobileLinkStyle}>Contact</Link>
           <Link href="/reservations" onClick={() => setNavOpen(false)} style={{ ...mobileLinkStyle, color: "#c2a06a" }}>Reservations</Link>
           <button
             onClick={() => setNavOpen(false)}
