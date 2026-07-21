@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Nav from "@/components/Nav";
-import Footer from "@/components/Footer";
 
 export default function ContactPage() {
   return (
@@ -52,7 +51,24 @@ export default function ContactPage() {
         </div>
       </div>
 
-      <Footer />
+      <div style={{ padding: "0 clamp(24px,6vw,96px) 40px" }}>
+        <div
+          style={{
+            maxWidth: 1360,
+            margin: "0 auto",
+            paddingTop: 40,
+            paddingBottom: 24,
+            borderTop: "1px solid rgba(236,231,222,0.1)",
+            display: "flex",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 12,
+          }}
+        >
+          <span style={{ fontSize: 11, color: "rgba(236,231,222,0.35)" }}>© 2026 KINNARI. A concept.</span>
+          <span style={{ fontSize: 11, color: "rgba(236,231,222,0.35)" }}>12 Harrow Lane, Aldermere Quarter</span>
+        </div>
+      </div>
     </div>
   );
 }
