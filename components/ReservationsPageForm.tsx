@@ -55,7 +55,7 @@ function buildICSDataUrl(booking: { date: string; time: string; partySize: numbe
   return `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
 }
 
-export default function ReservationsPageForm() {
+export default function ReservationsPageForm({ onConfirmed }: { onConfirmed?: () => void }) {
   const searchParams = useSearchParams();
 
   const [date, setDate] = useState(() => searchParams.get("date") || todayISO());
@@ -131,6 +131,7 @@ export default function ReservationsPageForm() {
         setConfirmedBooking({ date, time: selectedTime as string, partySize });
         setSlots((prev) => prev.map((s) => (s.time === selectedTime ? { ...s, available: false } : s)));
         setSelectedTime(null);
+        onConfirmed?.();
       }
     } catch {
       setResult({ confirmed: false, message: "Something went wrong. Please try again." });

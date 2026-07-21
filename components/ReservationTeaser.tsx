@@ -54,7 +54,7 @@ function buildICSDataUrl(booking: { date: string; time: string; partySize: numbe
   return `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
 }
 
-export default function ReservationTeaser() {
+export default function ReservationTeaser({ onConfirmed }: { onConfirmed?: () => void }) {
   const [date, setDate] = useState("");
   const [partySize, setPartySize] = useState(2);
   const [name, setName] = useState("");
@@ -136,6 +136,7 @@ export default function ReservationTeaser() {
         setConfirmedBooking({ date, time: selectedTime as string, partySize });
         setSlots((prev) => prev.map((s) => (s.time === selectedTime ? { ...s, available: false } : s)));
         setSelectedTime(null);
+        onConfirmed?.();
       }
     } catch {
       setResult({ confirmed: false, message: "Something went wrong. Please try again." });
