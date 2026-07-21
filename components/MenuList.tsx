@@ -87,12 +87,12 @@ function filterButtonStyle(active: boolean): React.CSSProperties {
     background: "none",
     border: "none",
     borderBottom: active ? "1px solid #c2a06a" : "1px solid transparent",
-    padding: "4px 2px 6px",
-    fontSize: 11,
-    letterSpacing: "0.14em",
+    padding: "2px 1px 4px",
+    fontSize: 10,
+    letterSpacing: "0.1em",
     fontFamily: "var(--font-mulish), sans-serif",
     fontWeight: 400,
-    color: active ? "#e6d5ab" : "rgba(236,231,222,0.5)",
+    color: active ? "#e6d5ab" : "rgba(236,231,222,0.45)",
     cursor: "pointer",
     transition: "color 0.2s, border-color 0.2s",
   };
@@ -105,11 +105,11 @@ function DishTags({ tags }: { tags: Tag[] }) {
         <span
           key={tag}
           style={{
-            marginLeft: 9,
-            fontSize: 9,
-            letterSpacing: "0.1em",
+            marginLeft: 10,
+            fontSize: 10,
+            letterSpacing: "0.14em",
             fontWeight: 400,
-            color: "rgba(236,231,222,0.4)",
+            color: "#c2a06a",
             verticalAlign: "middle",
           }}
         >
@@ -148,8 +148,9 @@ export default function MenuList() {
 
   return (
     <>
-      <div style={{ padding: "0 clamp(24px,6vw,96px)", maxWidth: 840, margin: "0 auto clamp(48px,6vw,72px)" }}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 22, justifyContent: "center" }}>
+      <div style={{ padding: "0 clamp(24px,6vw,96px)", maxWidth: 840, margin: "0 auto clamp(32px,4vw,44px)" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center", alignItems: "baseline" }}>
+          <span style={{ fontSize: 10, letterSpacing: "0.2em", color: "rgba(236,231,222,0.3)", marginRight: 4 }}>FILTER</span>
           <button type="button" onClick={() => setActiveTag(null)} style={filterButtonStyle(activeTag === null)}>
             ALL
           </button>
