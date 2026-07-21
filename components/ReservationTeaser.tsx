@@ -29,6 +29,31 @@ function formatTime12(time: string) {
   return `${h12}:${m.toString().padStart(2, "0")} ${period}`;
 }
 
+function buildICSDataUrl(booking: { date: string; time: string; partySize: number }) {
+  const start = new Date(`${booking.date}T${booking.time}:00`);
+  const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  const toICSDate = (d: Date) =>
+    `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}00Z`;
+
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//KINNARI//Reservation//EN",
+    "BEGIN:VEVENT",
+    `DTSTART:${toICSDate(start)}`,
+    `DTEND:${toICSDate(end)}`,
+    `SUMMARY:Dinner reservation at KINNARI for ${booking.partySize}`,
+    "LOCATION:12 Harrow Lane, Aldermere Quarter",
+    "DESCRIPTION:Reservation at KINNARI.",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+
+  return `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
+}
+
 export default function ReservationTeaser() {
   const [date, setDate] = useState("");
   const [partySize, setPartySize] = useState(2);
@@ -44,6 +69,7 @@ export default function ReservationTeaser() {
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ confirmed: boolean; message: string } | null>(null);
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
+  const [confirmedBooking, setConfirmedBooking] = useState<{ date: string; time: string; partySize: number } | null>(null);
 
   const requestKey = date ? `${date}:${partySize}` : null;
   const slotsLoading = requestKey !== null && loadedKey !== requestKey;
@@ -107,6 +133,7 @@ export default function ReservationTeaser() {
       const data = await res.json();
       setResult(data);
       if (data.confirmed) {
+        setConfirmedBooking({ date, time: selectedTime as string, partySize });
         setSlots((prev) => prev.map((s) => (s.time === selectedTime ? { ...s, available: false } : s)));
         setSelectedTime(null);
       }
@@ -125,7 +152,12 @@ export default function ReservationTeaser() {
         <div style={{ fontFamily: "var(--font-cormorant), serif", fontStyle: "italic", fontSize: 22, color: "#e6d5ab", marginBottom: 14 }}>
           Thank you, {name.split(" ")[0]}.
         </div>
-        <p style={{ fontSize: 15, fontWeight: 300, color: "rgba(236,231,222,0.82)", lineHeight: 1.7, margin: 0 }}>{result.message}</p>
+        <p style={{ fontSize: 15, fontWeight: 300, color: "rgba(236,231,222,0.82)", lineHeight: 1.7, margin: "0 0 24px" }}>{result.message}</p>
+        {confirmedBooking && (
+          <a href={buildICSDataUrl(confirmedBooking)} download="kinnari-reservation.ics" className="kn-cta" style={{ textDecoration: "none", display: "inline-block" }}>
+            ADD TO CALENDAR
+          </a>
+        )}
       </div>
     );
   }
