@@ -12,6 +12,12 @@ const labelStyle: React.CSSProperties = {
   marginBottom: 8,
 };
 
+const errorStyle: React.CSSProperties = {
+  fontSize: 11,
+  color: "#e6b8ab",
+  marginTop: 6,
+};
+
 function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -36,6 +42,7 @@ export default function ReservationTeaser() {
 
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ confirmed: boolean; message: string } | null>(null);
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
   const requestKey = date ? `${date}:${partySize}` : null;
   const slotsLoading = requestKey !== null && loadedKey !== requestKey;
@@ -75,7 +82,8 @@ export default function ReservationTeaser() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!selectedSlotValid || !selectedTime) return;
+    setAttemptedSubmit(true);
+    if (!formValid) return;
 
     setSubmitting(true);
     setResult(null);
@@ -121,10 +129,10 @@ export default function ReservationTeaser() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} noValidate>
       <div className="kn-res-row" style={{ marginBottom: 28, textAlign: "left" }}>
         <div>
-          <label htmlFor="teaser-date" style={labelStyle}>DATE</label>
+          <label htmlFor="teaser-date" style={labelStyle}>DATE *</label>
           <input
             id="teaser-date"
             name="date"
@@ -134,10 +142,13 @@ export default function ReservationTeaser() {
             value={date}
             onChange={(e) => handleDateChange(e.target.value)}
             required
+            aria-invalid={attemptedSubmit && !date}
+            aria-describedby={attemptedSubmit && !date ? "teaser-date-error" : undefined}
           />
+          {attemptedSubmit && !date && <div id="teaser-date-error" style={errorStyle}>Required</div>}
         </div>
         <div>
-          <label htmlFor="teaser-party" style={labelStyle}>PARTY SIZE</label>
+          <label htmlFor="teaser-party" style={labelStyle}>PARTY SIZE *</label>
           <input
             id="teaser-party"
             name="partySize"
@@ -151,7 +162,7 @@ export default function ReservationTeaser() {
           />
         </div>
         <div>
-          <label htmlFor="teaser-name" style={labelStyle}>NAME</label>
+          <label htmlFor="teaser-name" style={labelStyle}>NAME *</label>
           <input
             id="teaser-name"
             name="name"
@@ -161,10 +172,13 @@ export default function ReservationTeaser() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            aria-invalid={attemptedSubmit && !name.trim()}
+            aria-describedby={attemptedSubmit && !name.trim() ? "teaser-name-error" : undefined}
           />
+          {attemptedSubmit && !name.trim() && <div id="teaser-name-error" style={errorStyle}>Required</div>}
         </div>
         <div>
-          <label htmlFor="teaser-phone" style={labelStyle}>PHONE</label>
+          <label htmlFor="teaser-phone" style={labelStyle}>PHONE *</label>
           <input
             id="teaser-phone"
             name="phone"
@@ -174,12 +188,15 @@ export default function ReservationTeaser() {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             required
+            aria-invalid={attemptedSubmit && !phone.trim()}
+            aria-describedby={attemptedSubmit && !phone.trim() ? "teaser-phone-error" : undefined}
           />
+          {attemptedSubmit && !phone.trim() && <div id="teaser-phone-error" style={errorStyle}>Required</div>}
         </div>
       </div>
 
       <div style={{ marginBottom: 28, textAlign: "left" }}>
-        <label htmlFor="teaser-email" style={labelStyle}>EMAIL</label>
+        <label htmlFor="teaser-email" style={labelStyle}>EMAIL *</label>
         <input
           id="teaser-email"
           name="email"
@@ -189,12 +206,15 @@ export default function ReservationTeaser() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          aria-invalid={attemptedSubmit && !email.trim()}
+          aria-describedby={attemptedSubmit && !email.trim() ? "teaser-email-error" : undefined}
         />
+        {attemptedSubmit && !email.trim() && <div id="teaser-email-error" style={errorStyle}>Required</div>}
       </div>
 
       {date && (
         <div style={{ marginBottom: 28, textAlign: "left" }}>
-          <label style={labelStyle}>AVAILABLE TIMES</label>
+          <label style={labelStyle}>AVAILABLE TIMES *</label>
           {slotsLoading ? (
             <div style={{ fontSize: 14, color: "rgba(236,231,222,0.5)", padding: "14px 0" }}>Checking availability…</div>
           ) : (
@@ -212,6 +232,7 @@ export default function ReservationTeaser() {
               ))}
             </div>
           )}
+          {attemptedSubmit && !selectedSlotValid && <div style={errorStyle}>Please select an available time.</div>}
         </div>
       )}
 
@@ -221,7 +242,7 @@ export default function ReservationTeaser() {
         </div>
       )}
 
-      <button type="submit" className="kn-cta-solid" disabled={!formValid || submitting} style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+      <button type="submit" className="kn-cta-solid" disabled={submitting} style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
         {submitting && <span className="kn-spinner" />}
         {submitting ? "CONFIRMING…" : "REQUEST A TABLE"}
       </button>

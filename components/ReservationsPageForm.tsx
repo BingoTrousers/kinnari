@@ -13,6 +13,12 @@ const labelStyle: React.CSSProperties = {
   marginBottom: 8,
 };
 
+const errorStyle: React.CSSProperties = {
+  fontSize: 11,
+  color: "#e6b8ab",
+  marginTop: 6,
+};
+
 function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -42,6 +48,7 @@ export default function ReservationsPageForm() {
 
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ confirmed: boolean; message: string } | null>(null);
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
   const requestKey = `${date}:${partySize}`;
   const slotsLoading = loadedKey !== requestKey;
@@ -79,7 +86,8 @@ export default function ReservationsPageForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!selectedSlotValid || !selectedTime) return;
+    setAttemptedSubmit(true);
+    if (!formValid) return;
 
     setSubmitting(true);
     setResult(null);
@@ -115,22 +123,27 @@ export default function ReservationsPageForm() {
           <p style={{ fontSize: 15, fontWeight: 300, color: "rgba(236,231,222,0.82)", lineHeight: 1.7, margin: 0 }}>{result.message}</p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <div className="kn-res-row" style={{ marginBottom: 32, textAlign: "left" }}>
             <div>
-              <label style={labelStyle}>DATE</label>
+              <label htmlFor="res-date" style={labelStyle}>DATE *</label>
               <input
+                id="res-date"
                 className="kn-input"
                 type="date"
                 value={date}
                 min={todayISO()}
                 onChange={(e) => handleDateChange(e.target.value)}
                 required
+                aria-invalid={attemptedSubmit && !date}
+                aria-describedby={attemptedSubmit && !date ? "res-date-error" : undefined}
               />
+              {attemptedSubmit && !date && <div id="res-date-error" style={errorStyle}>Required</div>}
             </div>
             <div>
-              <label style={labelStyle}>PARTY SIZE</label>
+              <label htmlFor="res-party" style={labelStyle}>PARTY SIZE *</label>
               <input
+                id="res-party"
                 className="kn-input"
                 type="number"
                 min={1}
@@ -141,22 +154,55 @@ export default function ReservationsPageForm() {
               />
             </div>
             <div>
-              <label style={labelStyle}>NAME</label>
-              <input className="kn-input" type="text" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} required />
+              <label htmlFor="res-name" style={labelStyle}>NAME *</label>
+              <input
+                id="res-name"
+                className="kn-input"
+                type="text"
+                placeholder="Full name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                aria-invalid={attemptedSubmit && !name.trim()}
+                aria-describedby={attemptedSubmit && !name.trim() ? "res-name-error" : undefined}
+              />
+              {attemptedSubmit && !name.trim() && <div id="res-name-error" style={errorStyle}>Required</div>}
             </div>
             <div>
-              <label style={labelStyle}>PHONE</label>
-              <input className="kn-input" type="tel" placeholder="(212) 555-0148" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+              <label htmlFor="res-phone" style={labelStyle}>PHONE *</label>
+              <input
+                id="res-phone"
+                className="kn-input"
+                type="tel"
+                placeholder="(212) 555-0148"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+                aria-invalid={attemptedSubmit && !phone.trim()}
+                aria-describedby={attemptedSubmit && !phone.trim() ? "res-phone-error" : undefined}
+              />
+              {attemptedSubmit && !phone.trim() && <div id="res-phone-error" style={errorStyle}>Required</div>}
             </div>
           </div>
 
           <div style={{ marginBottom: 32, textAlign: "left" }}>
-            <label style={labelStyle}>EMAIL</label>
-            <input className="kn-input" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <label htmlFor="res-email" style={labelStyle}>EMAIL *</label>
+            <input
+              id="res-email"
+              className="kn-input"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              aria-invalid={attemptedSubmit && !email.trim()}
+              aria-describedby={attemptedSubmit && !email.trim() ? "res-email-error" : undefined}
+            />
+            {attemptedSubmit && !email.trim() && <div id="res-email-error" style={errorStyle}>Required</div>}
           </div>
 
           <div style={{ marginBottom: 32, textAlign: "left" }}>
-            <label style={labelStyle}>AVAILABLE TIMES</label>
+            <label style={labelStyle}>AVAILABLE TIMES *</label>
             {slotsLoading ? (
               <div style={{ fontSize: 14, color: "rgba(236,231,222,0.5)", padding: "14px 0" }}>Checking availability…</div>
             ) : (
@@ -174,6 +220,7 @@ export default function ReservationsPageForm() {
                 ))}
               </div>
             )}
+            {attemptedSubmit && !selectedSlotValid && <div style={errorStyle}>Please select an available time.</div>}
           </div>
 
           {result && !result.confirmed && (
@@ -182,7 +229,7 @@ export default function ReservationsPageForm() {
             </div>
           )}
 
-          <button type="submit" className="kn-cta-solid" disabled={!formValid || submitting} style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+          <button type="submit" className="kn-cta-solid" disabled={submitting} style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
             {submitting && <span className="kn-spinner" />}
             {submitting ? "CONFIRMING…" : "REQUEST A TABLE"}
           </button>
