@@ -89,11 +89,11 @@ function DishTags({ tags }: { tags: Tag[] }) {
         <span
           key={tag}
           style={{
-            marginLeft: 10,
-            fontSize: 10,
-            letterSpacing: "0.14em",
+            marginLeft: 9,
+            fontSize: 9,
+            letterSpacing: "0.1em",
             fontWeight: 400,
-            color: "#c2a06a",
+            color: "rgba(236,231,222,0.4)",
             verticalAlign: "middle",
           }}
         >
