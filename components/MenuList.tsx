@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 
 const TAGS = ["vegetarian", "vegan", "gluten-free", "shellfish", "nuts"] as const;
 type Tag = (typeof TAGS)[number];
@@ -105,6 +106,19 @@ function DishTags({ tags }: { tags: Tag[] }) {
 
 export default function MenuList() {
   const [activeTag, setActiveTag] = useState<Tag | null>(null);
+  const [selectedDishes, setSelectedDishes] = useState<Set<string>>(new Set());
+
+  function toggleDish(name: string) {
+    setSelectedDishes((prev) => {
+      const next = new Set(prev);
+      if (next.has(name)) {
+        next.delete(name);
+      } else {
+        next.add(name);
+      }
+      return next;
+    });
+  }
 
   const filteredCourses = useMemo(() => {
     if (!activeTag) return courses;
@@ -166,7 +180,22 @@ export default function MenuList() {
                     <DishTags tags={dish.tags} />
                   </div>
                   <div style={{ fontSize: 12, fontWeight: 400, letterSpacing: "0.06em", textTransform: "uppercase", color: "rgba(236,231,222,0.42)", marginBottom: 6 }}>{dish.subtitle}</div>
-                  <div style={{ fontSize: 14, fontWeight: 300, fontStyle: "italic", color: "rgba(236,231,222,0.6)", maxWidth: "56ch" }}>{dish.desc}</div>
+                  <div style={{ fontSize: 14, fontWeight: 300, fontStyle: "italic", color: "rgba(236,231,222,0.6)", maxWidth: "56ch", marginBottom: 10 }}>{dish.desc}</div>
+                  <button
+                    type="button"
+                    onClick={() => toggleDish(dish.name)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      padding: 0,
+                      cursor: "pointer",
+                      fontSize: 11,
+                      letterSpacing: "0.1em",
+                      color: selectedDishes.has(dish.name) ? "#e6d5ab" : "rgba(236,231,222,0.45)",
+                    }}
+                  >
+                    {selectedDishes.has(dish.name) ? "✓ ADDED TO TASTING REQUEST" : "+ ADD TO TASTING REQUEST"}
+                  </button>
                 </div>
                 <div style={{ fontFamily: "var(--font-cormorant), serif", fontSize: 18, color: "#c2a06a" }}>{dish.price}</div>
               </div>
@@ -174,6 +203,37 @@ export default function MenuList() {
           </div>
         </div>
       ))}
+
+      {selectedDishes.size > 0 && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 55,
+            background: "#1c1811",
+            borderTop: "1px solid rgba(201,162,75,0.3)",
+            padding: "16px clamp(24px,6vw,96px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+            flexWrap: "wrap",
+          }}
+        >
+          <span style={{ fontSize: 13, color: "rgba(236,231,222,0.8)" }}>
+            {selectedDishes.size} dish{selectedDishes.size > 1 ? "es" : ""} selected for tasting request
+          </span>
+          <Link
+            href={`/reservations?notes=${encodeURIComponent(`Tasting request: ${Array.from(selectedDishes).join(", ")}`)}`}
+            className="kn-cta-solid"
+            style={{ textDecoration: "none" }}
+          >
+            CONTINUE TO RESERVATION →
+          </Link>
+        </div>
+      )}
     </>
   );
 }
