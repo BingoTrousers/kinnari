@@ -45,6 +45,7 @@ export default function ReservationsPageForm() {
   const [name, setName] = useState(() => searchParams.get("name") || "");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [notes, setNotes] = useState(() => searchParams.get("notes") || "");
 
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ confirmed: boolean; message: string } | null>(null);
@@ -96,7 +97,7 @@ export default function ReservationsPageForm() {
       const res = await fetch("/api/reservations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ date, time: selectedTime, displayTime: formatTime12(selectedTime), partySize, name, email, phone }),
+        body: JSON.stringify({ date, time: selectedTime, displayTime: formatTime12(selectedTime), partySize, name, email, phone, notes }),
       });
       const data = await res.json();
       setResult(data);
@@ -199,6 +200,19 @@ export default function ReservationsPageForm() {
               aria-describedby={attemptedSubmit && !email.trim() ? "res-email-error" : undefined}
             />
             {attemptedSubmit && !email.trim() && <div id="res-email-error" style={errorStyle}>Required</div>}
+          </div>
+
+          <div style={{ marginBottom: 32, textAlign: "left" }}>
+            <label htmlFor="res-notes" style={labelStyle}>NOTES / SPECIAL REQUESTS</label>
+            <textarea
+              id="res-notes"
+              className="kn-input"
+              rows={3}
+              placeholder="Dietary needs, special occasions, tasting requests…"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              style={{ resize: "vertical" }}
+            />
           </div>
 
           <div style={{ marginBottom: 32, textAlign: "left" }}>

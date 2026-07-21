@@ -35,6 +35,7 @@ export default function ReservationTeaser() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [notes, setNotes] = useState("");
 
   const [slots, setSlots] = useState<Slot[]>([]);
   const [loadedKey, setLoadedKey] = useState<string | null>(null);
@@ -100,6 +101,7 @@ export default function ReservationTeaser() {
           name,
           email,
           phone,
+          notes,
         }),
       });
       const data = await res.json();
@@ -210,6 +212,20 @@ export default function ReservationTeaser() {
           aria-describedby={attemptedSubmit && !email.trim() ? "teaser-email-error" : undefined}
         />
         {attemptedSubmit && !email.trim() && <div id="teaser-email-error" style={errorStyle}>Required</div>}
+      </div>
+
+      <div style={{ marginBottom: 28, textAlign: "left" }}>
+        <label htmlFor="teaser-notes" style={labelStyle}>NOTES / SPECIAL REQUESTS</label>
+        <textarea
+          id="teaser-notes"
+          name="notes"
+          className="kn-input"
+          rows={3}
+          placeholder="Dietary needs, special occasions, tasting requests…"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          style={{ resize: "vertical" }}
+        />
       </div>
 
       {date && (

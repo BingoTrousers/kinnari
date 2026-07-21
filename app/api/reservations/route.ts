@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ confirmed: false, message: "Invalid request." }, { status: 400 });
   }
 
-  const { date, time, displayTime, partySize, name, email, phone } = body ?? {};
+  const { date, time, displayTime, partySize, name, email, phone, notes } = body ?? {};
 
   if (!date || !time || !partySize || !name || !email || !phone) {
     return NextResponse.json(
@@ -42,8 +42,10 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  const notesAck = typeof notes === "string" && notes.trim() ? ` We've noted your request: "${notes.trim()}."` : "";
+
   return NextResponse.json({
     confirmed: true,
-    message: `Your table for ${partySize} on ${date} at ${displayTime ?? time} is confirmed. A confirmation email is on its way to ${email}.`,
+    message: `Your table for ${partySize} on ${date} at ${displayTime ?? time} is confirmed. A confirmation email is on its way to ${email}.${notesAck}`,
   });
 }
