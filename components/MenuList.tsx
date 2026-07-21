@@ -82,6 +82,22 @@ function Peppers({ heat }: { heat: number }) {
   );
 }
 
+function filterButtonStyle(active: boolean): React.CSSProperties {
+  return {
+    background: "none",
+    border: "none",
+    borderBottom: active ? "1px solid #c2a06a" : "1px solid transparent",
+    padding: "4px 2px 6px",
+    fontSize: 11,
+    letterSpacing: "0.14em",
+    fontFamily: "var(--font-mulish), sans-serif",
+    fontWeight: 400,
+    color: active ? "#e6d5ab" : "rgba(236,231,222,0.5)",
+    cursor: "pointer",
+    transition: "color 0.2s, border-color 0.2s",
+  };
+}
+
 function DishTags({ tags }: { tags: Tag[] }) {
   return (
     <>
@@ -133,17 +149,12 @@ export default function MenuList() {
   return (
     <>
       <div style={{ padding: "0 clamp(24px,6vw,96px)", maxWidth: 840, margin: "0 auto clamp(48px,6vw,72px)" }}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center" }}>
-          <button type="button" className={`kn-slot${activeTag === null ? " selected" : ""}`} onClick={() => setActiveTag(null)}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 22, justifyContent: "center" }}>
+          <button type="button" onClick={() => setActiveTag(null)} style={filterButtonStyle(activeTag === null)}>
             ALL
           </button>
           {TAGS.map((tag) => (
-            <button
-              key={tag}
-              type="button"
-              className={`kn-slot${activeTag === tag ? " selected" : ""}`}
-              onClick={() => setActiveTag(tag)}
-            >
+            <button key={tag} type="button" onClick={() => setActiveTag(tag)} style={filterButtonStyle(activeTag === tag)}>
               {TAG_LABELS[tag]}
             </button>
           ))}
